@@ -16,8 +16,20 @@
         justify-content: space-between;
       }
       
-      .left-section, .right-section {
-        width: 49%;
+      .left-section, .middle-section, .right-section {
+        width: 32%;
+
+      }
+        .Live-HTML-Section {
+        border: 1px solid black;
+        padding: 10px;
+      }
+
+      .HTML-Section {
+        border: 1px solid black;
+        padding: 10px;
+      }
+
       }
     </style>
 
@@ -31,18 +43,27 @@
 
 
     <div class="Toolbox-Section">
-     <div id="blocklyDiv" style="height: 900px; width:1000px;"></div>
+      <p> Blockly Toolbox </p>
+     <div id="blocklyDiv" style="height: 2400px; width:1000px;"></div>
     </div>
     <!-- Toolbox part ends here -->
     
     <!-- HTML part starts here -->
     <div class="HTML-Section">
-      <pre id="generated-html"></pre>
-      <div id=sourcecode></div>
+      <p> Generated HTML code </p>
+      <pre id="generated-html" ></pre>
+      <div id=sourcecode style="height: 2400px; width:700px;"></div>
     </div>
     <!-- HTML part ends here -->
 
+    <div class="Live-HTML-Section">
+      <iframe id="preview" style="height: 2400px; width: 1000px;"></iframe>
+    </div>
+
+
   </div>
+
+
 
   <script src="https://unpkg.com/blockly"></script>
   <script src="scripts/blocks.js"></script>
@@ -53,6 +74,9 @@
 
       var options = {
         toolbox : toolbox,
+        tooltips: true,
+        collapse : true,
+        trashcan : true,
       };
 
 var workspace = Blockly.inject(blocklyArea, options);
@@ -61,6 +85,10 @@ var workspace = Blockly.inject(blocklyArea, options);
 function myUpdateFunction(event) {
         var code = HTMLGenerator.workspaceToCode(workspace);
         document.getElementById('sourcecode').innerText = code;
+        var preview = document.getElementById("preview").contentDocument;
+        preview.open();
+        preview.write(code);
+        preview.close();
       }
       workspace.addChangeListener(myUpdateFunction);
 
