@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>HTML Generator</title>
+
+  {% load static %}
+
+  <link rel="stylesheet" href="https://code.getmdl.io/1.2.1/material.indigo-pink.min.css">
+
+  <style>
+    .container {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .left-section, .middle-section, .right-section {
+      width: 32%;
+    }
+
+    .Live-HTML-Section {
+      border: 1px solid black;
+      padding: 10px;
+    }
+
+    .HTML-Section {
+      border: 1px solid black;
+      padding: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="Toolbox-Section">
+      <p>Blockly Toolbox - use Blockly blocks to create your HTML document here</p>
+      <div id="blocklyDiv" style="height: 1200px; width:1000px;"></div>
+    </div>
+
+    <div class="HTML-Section">
+      <p>Generated HTML code - see, what your created HTML documents source code looks like</p>
+      <pre id="generated-html" style="height: 1200px; width:700px;"></pre>
+    </div>
+
+    <div class="Live-HTML-Section">
+      <iframe id="preview" style="height: 1200px; width: 1000px;"></iframe>
+    </div>
+  </div>
+
+  <a href="{% url 'blockly_app:homepage' %}"><button>Go to back to Home Page</button></a>
+
+  <script src="https://unpkg.com/blockly"></script>
+  <script src="{% static 'scripts/blocks.js' %}"></script>
+  <script src="{% static 'custom_blocks_html.js' %}"></script>
+  <script src="{% static 'scripts/main.js' %}"></script>
+
+  <script>
+    var blocklyArea = document.getElementById('blocklyDiv');
+
+    var toolbox = `
+<xml xmlns="http://www.w3.org/1999/xhtml" id="toolbox" style="display: none;">
+  <category name="HTML document blocks" colour="20">
+    <block type="document"></block>
+    <block type="header"></block>
+    <block type="title"></block>
+    <block type="body"></block>
+    <block type="paragraph"></block>
+    <block type="aside"></block>
+    <block type="div"></block>
+  </category>
+  <category name="HTML Text blocks" colour="20">
+    <block type="text"></block>
+    <block type="textWithStyle"></block>
+    <block type="newline"></block>
+    <block type="heading"></block>
+    <block type="image"></block>
+    <block type="hyperlink"></block>
+  </category>
+  <category name="HTML Lists" colour="20">
+    <block type="unorderedList"></block>
+    <block type="orderedList"></block>
+    <block type="listElem"></block>
+    <block type="descriptionList"></block>
+    <block type="descriptionItem"></block>
+  </category>
+  <category name="HTML Tables" colour="20">
+    <block type="table"></block>
+    <block type="tableRow"></block>
+    <block type="tableElement"></block>
+  </category>
+  <category name="Buttons" colour="20">
+    <block type="html_button"></block>
+    <block type="get_element_by_id"></block>
+  </category>
+  <category name="CSS core" colour="20">
+    <block type="html_style"></block>
+    <block type="css_selector"></block>
+  </category>
+  <category name="CSS text alignment" colour="20">
+    <block type="text_align"></block>
+    <block type="padding"></block>
+    <block type="width"></block>
+  </category>
+  <category name="JavaScript" colour="20">
+    <block type="inline_javascript"></block>
+    <block type="inline_javascript_alert"></block>
+  </category>
+  <category name="HTML Presets" colour="20">
+  <block type="document">
+    <statement name="content">
+      <block type="header">
+        <statement name="content">
+          <shadow type="title"></shadow>
+        </statement>
+        <next>
+          <block type="body">
+            <statement name="content">
+              <block type="paragraph">
+                <statement name="content">
+                  <shadow type="text"></shadow>
+                </statement>
+              </block>
+            </statement>
+          </block>
+        </next>
+      </block>
+    </statement>
+  </block>
+</category>
+</xml>
+`;
+
+    var options = {
+      toolbox: toolbox,
+      tooltips: true,
+      collapse: true,
+      trashcan: true,
+    };
+
+
+    var workspace = Blockly.inject(blocklyArea, options);
+
+
+    function myUpdateFunction(event) {
+      var code = HTMLGenerator.workspaceToCode(workspace);
+      document.getElementById('generated-html').innerText = code;
+
+      var preview = document.getElementById("preview").contentDocument;
+      preview.open();
+      preview.write(code);
+      preview.close();
+
+      // Save the workspace to localStorage
+      var xml = Blockly.Xml.workspaceToDom(workspace);
+      var xmlText = Blockly.Xml.domToText(xml);
+      localStorage.setItem('blocklySavedWorkspace', xmlText);
+    }
+
+    function loadSavedWorkspace() {
+      var savedWorkspace = localStorage.getItem('blocklySavedWorkspace');
+      if (savedWorkspace) {
+        var xml = Blockly.Xml.textToDom(savedWorkspace);
+        Blockly.Xml.domToWorkspace(xml, workspace);
+      }
+    }
+
+    workspace.addChangeListener(myUpdateFunction);
+    loadSavedWorkspace();
+  </script>
+</body>
+</html>

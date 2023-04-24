@@ -1,0 +1,119 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Blockly Django Integration</title>
+  <script src="{% static 'blockly_compressed.js' %}"></script>
+  <script src="{% static 'blocks_compressed.js' %}"></script>
+  <script src="{% static 'javascript_compressed.js' %}"></script>
+  <script src="{% static 'python_compressed.js' %}"></script>
+  <script src="{% static 'en.js' %}"></script>
+  <script src="{% static 'custom_blocks_html.js' %}"></script>
+  <style>
+  html, body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+  }
+  #blocklyDiv {
+    height: 100%;
+    width: 100%;
+  }
+</style>
+</head>
+<body>
+  <div id="blocklyDiv" style="height: 900px; width: 1800px;"></div>
+
+  <xml xmlns="http://www.w3.org/1999/xhtml" id="toolbox" style="display: none;">
+    <category name="HTML document blocks" colour="20">
+      <block type="document"></block>
+      <block type="header"></block>
+      <block type="title"></block>
+      <block type="body"></block>
+      <block type="paragraph"></block>
+      <block type="aside"></block>
+    </category>
+    <category name="HTML Text blocks" colour="20">
+      <block type="text"></block>
+      <block type="textWithStyle"></block>
+      <block type="newline"></block>
+      <block type="heading"></block>
+      <block type="image"></block>
+      <block type="hyperlink"></block>
+    </category>
+    <category name="HTML Lists" colour="20">
+      <block type="unorderedList"></block>
+      <block type="orderedList"></block>
+      <block type="listElem"></block>
+      <block type="descriptionList"></block>
+      <block type="descriptionItem"></block>
+    </category>
+    <category name="HTML Tables" colour="20">
+      <block type="table"></block>
+      <block type="tableRow"></block>
+      <block type="tableElement"></block>
+    </category>
+  </xml>
+  `;
+
+  <div id="savedXml" style="display: none;">{{ saved_xml }}</div>
+
+  <script>
+    // Initialize Blockly workspace
+    var workspace = Blockly.inject('blocklyDiv',
+        {toolbox: document.getElementById('toolbox')});
+  </script>
+
+    <script>
+    // Load the saved XML
+    var xmlText = document.getElementById('savedXml').textContent;
+    if (xmlText) {
+      var xml = Blockly.Xml.textToDom(xmlText);
+      Blockly.Xml.domToWorkspace(xml, workspace);
+    }
+  </script>
+
+
+  
+
+  <script>
+    document.getElementById('generate-code').addEventListener('click', function(event) {
+      event.preventDefault(); // Prevent the default form submission
+    
+      // Generate the code from the Blockly workspace
+    var generatedCode = Blockly.Python.workspaceToCode(workspace);
+
+    //Save the XML
+    var xml = Blockly.Xml.workspaceToDom(workspace);
+    var xmlText = Blockly.Xml.domToText(xml);
+    
+      // Create a hidden input field to store the generated code
+      var hiddenInputCode = document.createElement('input');
+      hiddenInputCode.type = 'hidden';
+      hiddenInputCode.name = 'generated_code';
+      hiddenInputCode.value = generatedCode;
+
+    var hiddenInputXml = document.createElement('input');
+    hiddenInputXml.type = 'hidden';
+    hiddenInputXml.name = 'saved_xml';
+    hiddenInputXml.value = xmlText;
+    
+      // Add the hidden input field to the form and submit the form
+      var form = document.getElementById('generated-code-form');
+      form.appendChild(hiddenInputCode);
+      form.appendChild(hiddenInputXml);
+      form.submit();
+    });
+    </script>
+
+<a href="{% url 'blockly_app:homepage' %}"><button>Go to back to Home Page</button></a>
+<a href="{% url 'blockly_app:test_page' %}"><button>Go to Test Page</button></a>
+
+    <form id="generated-code-form" method="POST" action="{% url 'blockly_app:generated_page' %}">
+        {% csrf_token %}
+    <button id="generate-code" type="submit">Generate Code</button>
+    <!-- Remove the textarea -->
+  </form>
+</body>
+</html>

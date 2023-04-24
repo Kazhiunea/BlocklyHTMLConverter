@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Example with Navigation</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 0;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: flex-end;
+      background-color: #333;
+      padding: 5px 10px;
+    }
+
+    .nav-item {
+      margin-left: 20px;
+      position: relative;
+    }
+
+    .nav-item a {
+      display: inline-block;
+      color: white;
+      text-decoration: none;
+      padding: 8px 10px;
+    }
+
+    .nav-item a:hover {
+      background-color: #555;
+    }
+
+    .dropdown {
+      display: none;
+      position: absolute;
+      background-color: #333;
+      min-width: 150px;
+      z-index: 1;
+      box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    }
+
+    .dropdown a {
+      display: block;
+      padding: 8px 10px;
+    }
+
+    .nav-item:hover .dropdown {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="navbar">
+    <div class="nav-item">
+      <a href="#">Home</a>
+    </div>
+    <div class="nav-item">
+      <a href="#">Cats</a>
+      <div class="dropdown">
+        <a href="#">Breed 1</a>
+        <a href="#">Breed 2</a>
+        <a href="#">Breed 3</a>
+        <a href="#">Breed 4</a>
+        <a href="#">Breed 5</a>
+      </div>
+    </div>
+    <div class="nav-item">
+      <a href="#">Dogs</a>
+      <div class="dropdown">
+        <a href="#">Breed 1</a>
+        <a href="#">Breed 2</a>
+        <a href="#">Breed 3</a>
+        <a href="#">Breed 4</a>
+        <a href="#">Breed 5</a>
+      </div>
+    </div>
+  </div>
+
+<h1>Hello, World!</h1>
+<button class="button" onclick="showAlert()">Click me!</button>
+
+<!-- Inline JavaScript -->
+<script>
+  function showAlert() {
+    alert('Hello from JavaScript!');
+  }
+</script>
+
+<a href="{% url 'blockly_app:workspace' %}"><button>Go back</button></a>
+</body>
+</html>

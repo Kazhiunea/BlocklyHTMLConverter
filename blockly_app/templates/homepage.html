@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage</title>
+</head>
+<body>
+    <h1>Welcome to the Blockly Django Project</h1>
+    <p>This project allows you to use Blockly to create and edit code in a visual programming environment. Click the button below to access the Blockly workspace and start building your project with Django!</p>
+    <a href="/blockly/workspace/"><button>Go to Blockly Django generator</button></a>
+    <a href="https://docs.djangoproject.com/en/4.2/" target="_blank" rel="noopener noreferrer">
+        <button>Open Django Documentation</button>
+      </a>
+    <p>Or click the button bellow this to go to the Blocky HTML workspace!</p>
+    <a href="{% url 'blockly_app:html_generator' %}"><button>Go to Blockly HTML Generator</button></a>
+    <a href="https://www.w3schools.com/html/html_intro.asp" target="_blank" rel="noopener noreferrer">
+        <button>Open HTML Documentation</button>
+      </a>
+</body>
+</html>
