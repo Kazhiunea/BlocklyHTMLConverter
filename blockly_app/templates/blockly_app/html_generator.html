@@ -11,24 +11,27 @@
 
   <link rel="stylesheet" href="https://code.getmdl.io/1.2.1/material.indigo-pink.min.css">
 
-  <style>
-    .container {
+   <style>
+    .sections-container {
       display: flex;
-      justify-content: space-between;
+      flex-direction: column;
+      height: 100vh;
     }
 
-    .left-section, .middle-section, .right-section {
-      width: 32%;
+    .Toolbox-Section {
+      flex-grow: 1;
     }
 
-    .Live-HTML-Section {
+    .bottom-section {
+      display: flex;
+      height: 50%;
+    }
+
+    .HTML-Section, .Live-HTML-Section {
+      flex-grow: 1;
       border: 1px solid black;
       padding: 10px;
-    }
-
-    .HTML-Section {
-      border: 1px solid black;
-      padding: 10px;
+      overflow: auto;
     }
   </style>
 </head>
@@ -37,17 +40,23 @@
   <div class="container">
     <div class="Toolbox-Section">
       <p>Blockly Toolbox - use Blockly blocks to create your HTML document here</p>
-      <div id="blocklyDiv" style="height: 1200px; width:1000px;"></div>
+      <div id="blocklyDiv" style="height: 2000px; width:100%;"></div>
+    </div>
+
+    <div class="Live-HTML-Section">
+      <iframe id="preview" style="height: 1200px; width: 100%;"></iframe>
     </div>
 
     <div class="HTML-Section">
       <p>Generated HTML code - see, what your created HTML documents source code looks like</p>
-      <pre id="generated-html" style="height: 1200px; width:700px;"></pre>
+      <pre id="generated-html" style="height: 1200px; width:100%;"></pre>
     </div>
 
-    <div class="Live-HTML-Section">
-      <iframe id="preview" style="height: 1200px; width: 1000px;"></iframe>
+    <div class="XML-Section">
+      <p>Generated Blockly XML code - see what your Blockly workspace looks like in XML</p>
+      <pre id="generated-xml" style="height: 1200px; width:100%;"></pre>
     </div>
+
   </div>
 
   <a href="{% url 'blockly_app:homepage' %}"><button>Go to back to Home Page</button></a>
@@ -62,7 +71,7 @@
 
     var toolbox = `
 <xml xmlns="http://www.w3.org/1999/xhtml" id="toolbox" style="display: none;">
-  <category name="HTML document blocks" colour="20">
+  <category name="HTML document blocks" colour="100">
     <block type="document"></block>
     <block type="header"></block>
     <block type="title"></block>
@@ -71,7 +80,7 @@
     <block type="aside"></block>
     <block type="div"></block>
   </category>
-  <category name="HTML Text blocks" colour="20">
+  <category name="HTML Text blocks" colour="100">
     <block type="text"></block>
     <block type="textWithStyle"></block>
     <block type="newline"></block>
@@ -79,14 +88,14 @@
     <block type="image"></block>
     <block type="hyperlink"></block>
   </category>
-  <category name="HTML Lists" colour="20">
+  <category name="HTML Lists" colour="100">
     <block type="unorderedList"></block>
     <block type="orderedList"></block>
     <block type="listElem"></block>
     <block type="descriptionList"></block>
     <block type="descriptionItem"></block>
   </category>
-  <category name="HTML Tables" colour="20">
+  <category name="HTML Tables" colour="100">
     <block type="table"></block>
     <block type="tableRow"></block>
     <block type="tableElement"></block>
@@ -98,6 +107,10 @@
   <category name="CSS core" colour="20">
     <block type="html_style"></block>
     <block type="css_selector"></block>
+    <block type="css_max_height"></block>
+    <block type="css_width"></block>
+    <block type="css_height"></block>
+    <block type="css_max_width"></block>
   </category>
   <category name="CSS text alignment" colour="20">
     <block type="text_align"></block>
@@ -108,19 +121,95 @@
     <block type="inline_javascript"></block>
     <block type="inline_javascript_alert"></block>
   </category>
+
+  <category name="W3 Core blocks" color="120">
+    <block type="html_div_with_class"></block>
+    <block type="w3_button"></block>
+    <block type="button_hover_color"></block>
+    <block type="w3_table"></block>
+    <block type="w3_table_options"></block>
+    <block type="w3_list"></block>
+    <block type="w3_badge"></block>
+    <block type="w3_tags"></block>
+    <block type="w3_resp_class"></block>
+    <block type="w3_layout_class"></block>
+    <block type="w3_dropdown"></block>
+    <block type="w3_dropdown_content"></block>
+    <block type="w3_a_hyperlink"></block>
+    <block type="w3_col"></block>
+    <block type="w3_row"></block>
+    <block type="w3_button_class"></block>
+    <block type="w3_block"></block>
+    <block type="w3_image"></block>
+    <block type="w3_modal"></block>
+    <block type="w3_modal_content"></block>
+    <block type="w3_button_modal_show"></block>
+    <block type="w3_button_modal_hide"></block>
+    
+    
+  </category>
+
+  <category name="W3 Text Effects" color="120">
+    <block type="w3_text_size"></block>
+    <block type="w3_font_type"></block>
+    <block type="w3_text_effect"></block>
+    <block type="w3_text_color"></block>
+  </category>
+
+  <category name="W3 Page Containers" color="120">
+    <block type="w3_container"></block>
+    <block type="w3_panel"></block>
+    <block type="w3_cards"></block>
+    <block type="w3_bar"></block>
+    <block type="w3_bar_item"></block>
+    <block type="w3_content"></block>
+    <block type="w3_row_padding"></block>
+  </category>
+
+  <category name="W3 Forms and Inputs" color="120">
+    <block type="w3_form"></block>
+    <block type="w3_text_input"></block>
+    <block type="html_label"></block>
+    <block type="w3_checkbox_input"></block>
+    <block type="w3_radio_input"></block>
+    <block type="w3_select_options_input"></block>
+    <block type="w3_select_options_placeholder"></block>
+    <block type="w3_select_options"></block>
+  </category>
+
+  <category name="W3 Styles and Effects" color="120">
+    <block type="w3_opacity_options"></block>
+    <block type="w3_grayscale_options"></block>
+    <block type="w3_sepia_options"></block>
+    <block type="w3_hover_visual_options"></block>
+    <block type="w3_animation_class"></block>
+    <block type="w3_color"></block>
+    <block type="w3_highlight_color"></block>
+    <block type="w3_hover_text"></block>
+    <block type="w3_border_color"></block>
+    <block type="w3_border"></block>
+    <block type="w3_navigation_position"></block>
+    <block type="w3_round"></block>
+    <block type="w3_circle"></block>
+    <block type="w3_padding"></block>
+    <block type="w3_margin"></block>
+    <block type="w3_display"></block>
+    <block type="w3_responsive_size"></block>
+    
+  </category>
   <category name="HTML Presets" colour="20">
   <block type="document">
     <statement name="content">
       <block type="header">
         <statement name="content">
-          <shadow type="title"></shadow>
+          <block type="title"></block>
         </statement>
         <next>
           <block type="body">
             <statement name="content">
               <block type="paragraph">
                 <statement name="content">
-                  <shadow type="text"></shadow>
+                  <block type="text"></block>
                 </statement>
               </block>
             </statement>
@@ -130,6 +219,13 @@
     </statement>
   </block>
 </category>
+<category name="Example website" color="60">
+</category>
+
+<category name="Website Part Presets" colour="20">
+
+</category>
+
 </xml>
 `;
 
@@ -147,6 +243,7 @@
     function myUpdateFunction(event) {
       var code = HTMLGenerator.workspaceToCode(workspace);
       document.getElementById('generated-html').innerText = code;
+      
 
       var preview = document.getElementById("preview").contentDocument;
       preview.open();
@@ -157,6 +254,8 @@
       var xml = Blockly.Xml.workspaceToDom(workspace);
       var xmlText = Blockly.Xml.domToText(xml);
       localStorage.setItem('blocklySavedWorkspace', xmlText);
+
+      document.getElementById('generated-xml').innerText = xmlText;
     }
 
     function loadSavedWorkspace() {
